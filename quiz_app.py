@@ -24,8 +24,9 @@ def main():
         num_questions = 15
 
     score = 0
+    current_question = 0
 
-    for _ in range(num_questions):
+    while current_question < num_questions:
         question, correct_answer = generate_question()
 
         user_answer = st.text_input(f"What is the answer to {question}?")
@@ -35,13 +36,12 @@ def main():
             if user_answer == correct_answer:
                 st.success("Correct!")
                 score += 1
-                st.write(f"Your current score is: {score}/{_ + 1}")
-
-                # Display the next question only if the current one is answered correctly
-                if _ < num_questions - 1:
-                    st.text("Next Question:")
+                st.write(f"Your current score is: {score}/{current_question + 1}")
+                current_question += 1
             else:
                 st.error(f"Wrong! The correct answer is {correct_answer}")
+        else:
+            st.warning("Please enter an answer.")
 
     st.write(f"Your final score is: {score}/{num_questions}")
 
