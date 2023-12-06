@@ -28,9 +28,11 @@ def main():
     with st.form("quiz_form"):
         current_question = 0
 
-        while current_question < num_questions:
-            question, correct_answer = generate_question()
+        # Use a button to submit the form instead of st.form_submit_button
+        submit_button = st.form_submit_button("Submit Answer")
 
+        if submit_button:
+            question, correct_answer = generate_question()
             user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
 
             if user_answer:
@@ -41,8 +43,6 @@ def main():
 
                 current_question += 1
                 st.write(f"Your current score is: {score}/{current_question}")
-
-            st.form_submit_button("Submit Answer")
 
     st.write(f"Your final score is: {score}/{num_questions}")
 
