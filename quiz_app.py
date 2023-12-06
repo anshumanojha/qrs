@@ -28,17 +28,18 @@ def main():
     for _ in range(num_questions):
         question, correct_answer = generate_question()
 
-        user_answer = st.text_input(f"What is the answer to {question}?")
+        while True:
+            user_answer = st.text_input(f"What is the answer to {question}?")
 
-        if user_answer:
-            user_answer = float(user_answer)
-            if user_answer == correct_answer:
-                st.success("Correct!")
-                score += 1
-                st.write(f"Your current score is: {score}/{_ + 1}")
-            else:
-                st.error(f"Wrong! The correct answer is {correct_answer}")
-                st.write(f"Your current score is: {score}/{_}")
+            if user_answer:
+                user_answer = float(user_answer)
+                if user_answer == correct_answer:
+                    st.success("Correct!")
+                    score += 1
+                    st.write(f"Your current score is: {score}/{_ + 1}")
+                    break  # Break out of the loop only if the answer is correct
+                else:
+                    st.error(f"Wrong! Try again.")
 
     st.write(f"Your final score is: {score}/{num_questions}")
 
