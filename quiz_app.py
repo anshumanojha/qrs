@@ -35,10 +35,10 @@ def main():
             if user_answer == correct_answer:
                 st.success("Correct!")
                 score += 1
+                st.write(f"Your current score is: {score}/{_ + 1}")
             else:
                 st.error(f"Wrong! The correct answer is {correct_answer}")
-
-            st.write(f"Your current score is: {score}/{_ + 1}")
+                st.write(f"Your current score is: {score}/{_}")
 
     st.write(f"Your final score is: {score}/{num_questions}")
 
