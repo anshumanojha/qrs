@@ -23,36 +23,27 @@ def main():
     else:
         num_questions = 15
 
-    questions_and_answers = []  # To store all questions and correct answers
-    user_answers = []  # To store user answers
     score = 0
 
-    # Generate questions
     for _ in range(num_questions):
         question, correct_answer = generate_question()
-        questions_and_answers.append((question, correct_answer))
 
-    # Present questions and get user answers
-    for i, (question, _) in enumerate(questions_and_answers):
-        user_answer = st.text_input(f"{i + 1}. What is the answer to {question}?")
-        user_answers.append(user_answer)
+        user_answer = st.text_input(f"What is the answer to {question}?")
 
-    st.write("Your answers:", user_answers)
+        if user_answer:
+            user_answer = float(user_answer)
+            if user_answer == correct_answer:
+                st.success("Correct!")
+                score += 1
+                st.write(f"Your current score is: {score}/{_ + 1}")
 
-    # Button to submit answers and display correct answers
-    if st.button("Submit Answers"):
-        st.write("Correct Answers:")
-        for i, (_, correct_answer) in enumerate(questions_and_answers):
-            st.write(f"{i + 1}. {correct_answer}")
+                # Display the next question only if the current one is answered correctly
+                if _ < num_questions - 1:
+                    st.text("Next Question:")
+            else:
+                st.error(f"Wrong! The correct answer is {correct_answer}")
 
-        # Calculate score
-        for user_answer, (_, correct_answer) in zip(user_answers, questions_and_answers):
-            if user_answer:
-                user_answer = float(user_answer)
-                if user_answer == correct_answer:
-                    score += 1
-
-        st.write("Your final score is:", score)
+    st.write(f"Your final score is: {score}/{num_questions}")
 
 if __name__ == "__main__":
     main()
