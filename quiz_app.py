@@ -24,25 +24,30 @@ def main():
         num_questions = 15
 
     score = 0
+    current_question = 0
 
-    with st.form("quiz_form"):
-        current_question = 0
+    while current_question < num_questions:
+        question, correct_answer = generate_question()
 
-        # Use a button to submit the form instead of st.form_submit_button
-        submit_button = st.form_submit_button("Submit Answer")
+        user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
 
-        if submit_button:
-            question, correct_answer = generate_question()
-            user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
-
+        if st.button("Submit Answer"):
             if user_answer:
                 user_answer = float(user_answer)
                 if user_answer == correct_answer:
                     st.success("Correct!")
                     score += 1
+                else:
+                    st.error(f"Wrong! The correct answer is {correct_answer}")
+            else:
+                st.warning("Please enter an answer.")
 
+        st.write(f"Your current score is: {score}/{current_question + 1}")
+
+        # Button to move to the next question
+        if current_question < num_questions - 1:
+            if st.button("Next Question"):
                 current_question += 1
-                st.write(f"Your current score is: {score}/{current_question}")
 
     st.write(f"Your final score is: {score}/{num_questions}")
 
