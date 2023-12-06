@@ -30,8 +30,10 @@ def main():
         question, correct_answer = generate_question()
 
         user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
+        submitted = False  # Variable to track whether the answer is submitted
 
         if st.button("Submit Answer"):
+            submitted = True  # Set submitted to True when the button is pressed
             if user_answer:
                 user_answer = float(user_answer)
                 if user_answer == correct_answer:
@@ -42,14 +44,15 @@ def main():
             else:
                 st.warning("Please enter an answer.")
 
-        st.write(f"Your current score is: {score}/{current_question + 1}")
+        if submitted:  # Show the result only if the answer is submitted
+            st.write(f"Your current score is: {score}/{current_question + 1}")
 
-        # Button to move to the next question
-        if current_question < num_questions - 1:
-            if st.button("Next Question"):
-                current_question += 1
-
-    st.write(f"Your final score is: {score}/{num_questions}")
+            # Button to move to the next question
+            if current_question < num_questions - 1:
+                if st.button("Next Question"):
+                    current_question += 1
+            else:
+                st.write(f"Your final score is: {score}/{num_questions}")
 
 if __name__ == "__main__":
     main()
