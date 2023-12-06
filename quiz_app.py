@@ -30,18 +30,10 @@ def main():
         question, correct_answer = generate_question()
         questions_and_answers.append((question, correct_answer))
 
-    for i, (question, correct_answer) in enumerate(questions_and_answers):
+    for i, (question, _) in enumerate(questions_and_answers):
         user_answer = st.text_input(f"{i + 1}. What is the answer to {question}?")
 
-        if user_answer:
-            user_answer = float(user_answer)
-            if user_answer == correct_answer:
-                st.success("Correct!")
-                score += 1
-            else:
-                st.error(f"Wrong! The correct answer is {correct_answer}")
-
-    st.write(f"Your final score is: {score}/{num_questions}")
+    st.write("Your final score is:", score)
 
     # Button to submit answers and display correct answers
     if st.button("Submit Answers"):
