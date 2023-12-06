@@ -29,7 +29,8 @@ def main():
     while current_question < num_questions:
         question, correct_answer = generate_question()
 
-        user_answer = st.text_input(f"What is the answer to {question}?")
+        # Use the current question index as part of the key to avoid DuplicateWidgetID error
+        user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
 
         if user_answer:
             user_answer = float(user_answer)
