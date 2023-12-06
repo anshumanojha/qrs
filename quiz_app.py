@@ -24,25 +24,25 @@ def main():
         num_questions = 15
 
     score = 0
-    current_question = 0
 
-    while current_question < num_questions:
-        question, correct_answer = generate_question()
+    with st.form("quiz_form"):
+        current_question = 0
 
-        # Use the current question index as part of the key to avoid DuplicateWidgetID error
-        user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
+        while current_question < num_questions:
+            question, correct_answer = generate_question()
 
-        if user_answer:
-            user_answer = float(user_answer)
-            if user_answer == correct_answer:
-                st.success("Correct!")
-                score += 1
-                st.write(f"Your current score is: {score}/{current_question + 1}")
+            user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
+
+            if user_answer:
+                user_answer = float(user_answer)
+                if user_answer == correct_answer:
+                    st.success("Correct!")
+                    score += 1
+
                 current_question += 1
-            else:
-                st.error(f"Wrong! The correct answer is {correct_answer}")
-        else:
-            st.warning("Please enter an answer.")
+                st.write(f"Your current score is: {score}/{current_question}")
+
+            st.form_submit_button("Submit Answer")
 
     st.write(f"Your final score is: {score}/{num_questions}")
 
