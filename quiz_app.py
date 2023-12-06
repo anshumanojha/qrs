@@ -23,28 +23,31 @@ def main():
     else:
         num_questions = 15
 
+    questions_and_answers = []  # To store all questions and correct answers
     score = 0
 
     for _ in range(num_questions):
         question, correct_answer = generate_question()
+        questions_and_answers.append((question, correct_answer))
 
-        while True:
-            user_answer = st.text_input(f"What is the answer to {question}?")
+    for i, (question, correct_answer) in enumerate(questions_and_answers):
+        user_answer = st.text_input(f"{i + 1}. What is the answer to {question}?")
 
-            if user_answer:
-                user_answer = float(user_answer)
-                if user_answer == correct_answer:
-                    st.success("Correct!")
-                    score += 1
-                    st.write(f"Your current score is: {score}/{_ + 1}")
-                    break  # Break out of the loop only if the answer is correct
-                else:
-                    st.error(f"Wrong! Try again.")
-
-            # Show current score even if the user hasn't answered correctly yet
-            st.write(f"Your current score is: {score}/{_ + 1}")
+        if user_answer:
+            user_answer = float(user_answer)
+            if user_answer == correct_answer:
+                st.success("Correct!")
+                score += 1
+            else:
+                st.error(f"Wrong! The correct answer is {correct_answer}")
 
     st.write(f"Your final score is: {score}/{num_questions}")
+
+    # Button to submit answers and display correct answers
+    if st.button("Submit Answers"):
+        st.write("Correct Answers:")
+        for i, (_, correct_answer) in enumerate(questions_and_answers):
+            st.write(f"{i + 1}. {correct_answer}")
 
 if __name__ == "__main__":
     main()
