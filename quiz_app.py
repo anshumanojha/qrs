@@ -41,6 +41,9 @@ def main():
                 else:
                     st.error(f"Wrong! Try again.")
 
+            # Show current score even if the user hasn't answered correctly yet
+            st.write(f"Your current score is: {score}/{_ + 1}")
+
     st.write(f"Your final score is: {score}/{num_questions}")
 
 if __name__ == "__main__":
