@@ -38,8 +38,9 @@ def main():
             else:
                 st.error(f"Wrong! The correct answer is {correct_answer}")
 
+        st.write(f"Your current score is: {score}/{_ + 1}")
+
     st.write(f"Your final score is: {score}/{num_questions}")
 
 if __name__ == "__main__":
     main()
-
