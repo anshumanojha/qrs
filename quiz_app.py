@@ -6,7 +6,6 @@ import sys
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
-import json  # Add this line
 
 print(sys.executable)
 
@@ -24,31 +23,23 @@ def generate_qr_code(linkedin_url):
     qr.make_image(fill_color="black", back_color="white").save(img_byte_array)
     return img_byte_array.getvalue()
 
-def predict_revenue(monthly_data, factors):
+def predict_next_month_revenue(monthly_data):
     # Prepare the input data
     X = pd.DataFrame({'Month': np.arange(1, len(monthly_data) + 1)})
-    for factor, value in factors.items():
-        X[factor] = value
-
-    # Assuming a basic linear regression model for demonstration
     y = monthly_data.values.reshape(-1, 1)
 
+    # Assuming a basic linear regression model for demonstration
     model = LinearRegression()
     model.fit(X, y)
 
     # Predict the next month
-    next_month_data = X.iloc[-1, :].copy()
-    next_month_data['Month'] += 1
-
-    for factor, value in factors.items():
-        next_month_data[factor] = value
-
-    predicted_revenue = model.predict([next_month_data])[0][0]
+    next_month_data = pd.DataFrame({'Month': [len(monthly_data) + 1]})
+    predicted_revenue = model.predict(next_month_data)[0][0]
 
     return predicted_revenue
 
 def main():
-    st.title("Data Analyst Resume and Revenue Prediction")
+    st.title("Data Analyst Resume and Future Revenue Prediction")
 
     # User Input: LinkedIn URL
     linkedin_url = st.text_input("Enter your LinkedIn URL:")
@@ -70,21 +61,18 @@ def main():
     # Revenue Prediction
     st.header("Revenue Prediction")
 
-    # User Input: Enter monthly revenue and factors affecting revenue
-    monthly_data = st.text_area("Enter Monthly Revenue (comma-separated):")
-    factors_text = st.text_area("Factors Affecting Revenue (JSON format):")
+    # User Input: Enter monthly revenue for different months
+    monthly_data = []
+    for i in range(1, 13):  # Assuming predictions for 12 months
+        revenue = st.number_input(f"Enter Revenue for Month {i}", value=0.0, step=0.01)
+        monthly_data.append(revenue)
 
-    if monthly_data and factors_text:
-        # Parse entered data
-        revenue_list = [float(val.strip()) for val in monthly_data.split(',')]
-        factors = json.loads(factors_text)
+    if len(monthly_data) >= 2:
+        # Predict the next month's revenue
+        predicted_revenue = predict_next_month_revenue(pd.Series(monthly_data))
 
-        if len(revenue_list) >= 2:
-            # Predict the next month's revenue
-            predicted_revenue = predict_revenue(pd.Series(revenue_list), factors)
-
-            st.write("Predicted Revenue for the Next Month:")
-            st.write(predicted_revenue)
+        st.write("Predicted Revenue for the Next Month:")
+        st.write(predicted_revenue)
 
 if __name__ == "__main__":
     main()
