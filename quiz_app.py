@@ -7,9 +7,10 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
 
+# Set pandas option globally
 pd.set_option('mode.use_inf_as_na', True)
+
 print(sys.executable)
 
 def generate_qr_code(linkedin_url):
@@ -98,7 +99,16 @@ def main():
         given_revenue = monthly_data + [predicted_revenue]
 
         # Plot graphs
-        st.pyplot(plot_revenue_graph(months, given_revenue, predicted_revenue))
+        fig, ax = plt.subplots(figsize=(10, 5))
+        sns.lineplot(x=months, y=given_revenue, label="Given Revenue", marker="o", ax=ax)
+        sns.lineplot(x=[months[-1], months[-1] + 1], y=[given_revenue[-1], predicted_revenue], label="Predicted Revenue", marker="o", linestyle="--", ax=ax)
+        plt.title("Given and Predicted Revenue Over Time")
+        plt.xlabel("Month")
+        plt.ylabel("Revenue")
+        plt.legend()
+
+        # Display the plot using st.pyplot
+        st.pyplot(fig)
 
 if __name__ == "__main__":
     main()
