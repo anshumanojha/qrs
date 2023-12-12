@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-pd.set_option('mode.use_inf_as_null', True)
+pd.set_option('mode.use_inf_as_na', True)
 print(sys.executable)
 
 def generate_qr_code(linkedin_url):
