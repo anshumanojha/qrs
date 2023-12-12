@@ -65,13 +65,13 @@ def main():
 
     # User Input: Enter monthly revenue for different months side by side
     monthly_data = []
-    row1, row2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     for i in range(1, 7):  # Assuming predictions for 6 months
-        revenue = row1.number_input(f"Month {i}", value=0.0, step=0.01)
+        revenue = col1.number_input(f"Month {i}", value=0.0, step=0.01)
         monthly_data.append(revenue)
 
     for i in range(7, 13):  # Assuming predictions for 6 months
-        revenue = row2.number_input(f"Month {i}", value=0.0, step=0.01)
+        revenue = col2.number_input(f"Month {i}", value=0.0, step=0.01)
         monthly_data.append(revenue)
 
     if len(monthly_data) >= 2:
