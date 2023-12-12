@@ -82,13 +82,23 @@ def main():
             for i, revenue in enumerate(predicted_revenue, start=len(given_monthly_data) + 1):
                 st.write(f"Month {i} Predicted Revenue: {revenue}")
 
-            # Plotting a time graph for entered and predicted revenues
+            # Plotting a time graph for entered revenues
             months = np.arange(1, len(given_monthly_data) + 7)
             all_revenues = np.concatenate((given_monthly_data, predicted_revenue))
 
             plt.figure(figsize=(10, 5))
             plt.plot(months, all_revenues, marker='o', label='Given and Predicted Revenue')
             plt.title("Given and Predicted Revenue Over Time")
+            plt.xlabel("Month")
+            plt.ylabel("Revenue")
+            plt.legend()
+            st.pyplot(plt)
+
+            # Plotting a separate graph for predicted revenue
+            predicted_months = np.arange(len(given_monthly_data) + 1, len(given_monthly_data) + 7)
+            plt.figure(figsize=(10, 5))
+            plt.plot(predicted_months, predicted_revenue, marker='o', color='orange', label='Predicted Revenue')
+            plt.title("Predicted Revenue Over Time")
             plt.xlabel("Month")
             plt.ylabel("Revenue")
             plt.legend()
