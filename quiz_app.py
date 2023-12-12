@@ -21,7 +21,7 @@ def generate_qr_code(linkedin_url):
     return img_byte_array.getvalue()
 
 def main():
-    st.title("LinkedIn QR Code Generator")
+    st.title("Data Analyst Resume")
 
     # User Input: LinkedIn URL
     linkedin_url = st.text_input("Enter your LinkedIn URL:")
@@ -34,7 +34,13 @@ def main():
         qr_code_image = generate_qr_code(linkedin_url)
         st.image(Image.open(io.BytesIO(qr_code_image)), caption="Scan QR Code to visit LinkedIn profile", width=100)
 
-    # Additional content (Personal Information, Skills, etc.) can be added here
+    # Personal Information
+    st.header("Personal Information")
+    st.write("Name: John Doe")
+    st.write("Email: john.doe@example.com")
+    st.write("Phone: +1234567890")
+
+    # Skills, Tools, Projects, Education, Work Experience (you can customize these sections as needed)
 
 if __name__ == "__main__":
     main()
