@@ -6,8 +6,6 @@ import sys
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 print(sys.executable)
 
@@ -63,15 +61,10 @@ def main():
     # Revenue Prediction
     st.header("Revenue Prediction")
 
-    # User Input: Enter monthly revenue for different months side by side
+    # User Input: Enter monthly revenue for different months
     monthly_data = []
-    col1, col2 = st.columns(2)
-    for i in range(1, 7):  # Assuming predictions for 6 months
-        revenue = col1.number_input(f"Month {i}", value=0.0, step=0.01)
-        monthly_data.append(revenue)
-
-    for i in range(7, 13):  # Assuming predictions for 6 months
-        revenue = col2.number_input(f"Month {i}", value=0.0, step=0.01)
+    for i in range(1, 13):  # Assuming predictions for 12 months
+        revenue = st.number_input(f"Enter Revenue for Month {i}", value=0.0, step=0.01)
         monthly_data.append(revenue)
 
     if len(monthly_data) >= 2:
@@ -80,18 +73,6 @@ def main():
 
         st.write("Predicted Revenue for the Next Month:")
         st.write(predicted_revenue)
-
-        # Create a graph for given revenue and predicted revenue
-        months = np.arange(1, len(monthly_data) + 2)
-        given_revenue = monthly_data + [predicted_revenue]
-
-        plt.figure(figsize=(10, 5))
-        sns.lineplot(x=months, y=given_revenue, label="Given Revenue", marker="o")
-        plt.title("Given and Predicted Revenue Over Time")
-        plt.xlabel("Month")
-        plt.ylabel("Revenue")
-        plt.legend()
-        st.pyplot(plt)
 
 if __name__ == "__main__":
     main()
