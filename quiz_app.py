@@ -9,6 +9,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Explicitly set pandas options to avoid OptionError
+pd.set_option('mode.use_inf_as_null', True)
+
 print(sys.executable)
 
 def generate_qr_code(linkedin_url):
