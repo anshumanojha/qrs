@@ -60,24 +60,25 @@ def main():
     # Revenue Prediction
     st.header("Revenue Prediction")
 
-    # User Input: Enter monthly revenue for different months side by side
+    # User Input: Enter all revenues in a single text box
+    revenue_input = st.text_input("Enter monthly revenues (comma-separated):", key="revenue_input")
+    
     given_monthly_data = []
 
-    # Use st.beta_columns to create a side-by-side layout
-    col1, col2, col3, col4, col5, col6 = st.beta_columns(6)
+    if revenue_input:
+        # Split the input values by comma and convert to float
+        given_monthly_data = [float(value.strip()) for value in revenue_input.split(',')]
 
-    for i in range(1, 7):  # Assuming predictions for 6 months
-        # Use colX.number_input for each column
-        with col1:
-            revenue = st.number_input(f"Month {i}", value=0.0, step=0.01, format="%f", key=f"revenue_{i}")
-            given_monthly_data.append(revenue)
+        # Display the entered revenues for each month
+        for i, revenue in enumerate(given_monthly_data, start=1):
+            st.write(f"Month {i} Revenue: {revenue}")
 
-    if len(given_monthly_data) == 6:
-        # Predict the next month's revenue
-        predicted_revenue = predict_next_month_revenue(given_monthly_data)
+        if len(given_monthly_data) == 6:
+            # Predict the next month's revenue
+            predicted_revenue = predict_next_month_revenue(given_monthly_data)
 
-        st.write("Predicted Revenue for the Next Month:")
-        st.write(predicted_revenue)
+            st.write("Predicted Revenue for the Next Month:")
+            st.write(predicted_revenue)
 
 if __name__ == "__main__":
     main()
