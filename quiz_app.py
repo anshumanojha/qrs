@@ -23,19 +23,28 @@ def generate_qr_code(linkedin_url):
     qr.make_image(fill_color="black", back_color="white").save(img_byte_array)
     return img_byte_array.getvalue()
 
-def predict_next_six_months_revenue(revenue_data):
+def predict_revenue(monthly_data, factors):
+    # Prepare the input data
+    X = pd.DataFrame({'Month': np.arange(1, len(monthly_data) + 1)})
+    for factor, value in factors.items():
+        X[factor] = value
+
     # Assuming a basic linear regression model for demonstration
-    X = np.arange(1, len(revenue_data) + 1).reshape(-1, 1)
-    y = revenue_data.values.reshape(-1, 1)
+    y = monthly_data.values.reshape(-1, 1)
 
     model = LinearRegression()
     model.fit(X, y)
 
-    # Predict the next 6 months
-    next_six_months = np.arange(len(revenue_data) + 1, len(revenue_data) + 7).reshape(-1, 1)
-    predicted_revenue = model.predict(next_six_months)
+    # Predict the next month
+    next_month_data = X.iloc[-1, :].copy()
+    next_month_data['Month'] += 1
 
-    return predicted_revenue.flatten()
+    for factor, value in factors.items():
+        next_month_data[factor] = value
+
+    predicted_revenue = model.predict([next_month_data])[0][0]
+
+    return predicted_revenue
 
 def main():
     st.title("Data Analyst Resume and Revenue Prediction")
@@ -60,16 +69,20 @@ def main():
     # Revenue Prediction
     st.header("Revenue Prediction")
 
-    # User Input: Enter 6 months' revenue
-    revenue_data = st.text_area("Enter 6 months' revenue (comma-separated):")
-    
-    if revenue_data:
-        revenue_list = [float(val.strip()) for val in revenue_data.split(',')]
-        if len(revenue_list) == 6:
-            # Predict the coming 6 months' revenue
-            predicted_revenue = predict_next_six_months_revenue(pd.Series(revenue_list))
+    # User Input: Enter monthly revenue and factors affecting revenue
+    monthly_data = st.text_area("Enter Monthly Revenue (comma-separated):")
+    factors_text = st.text_area("Factors Affecting Revenue (JSON format):")
 
-            st.write("Predicted Revenue for the Coming 6 Months:")
+    if monthly_data and factors_text:
+        # Parse entered data
+        revenue_list = [float(val.strip()) for val in monthly_data.split(',')]
+        factors = json.loads(factors_text)
+
+        if len(revenue_list) >= 2:
+            # Predict the next month's revenue
+            predicted_revenue = predict_revenue(pd.Series(revenue_list), factors)
+
+            st.write("Predicted Revenue for the Next Month:")
             st.write(predicted_revenue)
 
 if __name__ == "__main__":
