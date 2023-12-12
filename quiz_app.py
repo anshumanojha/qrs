@@ -20,7 +20,7 @@ def generate_qr_code(linkedin_url):
     qr.make_image(fill_color="black", back_color="white").save(img_byte_array)
     return img_byte_array.getvalue()
 
-def predict_next_month_revenue(monthly_data):
+def predict_future_revenue(monthly_data, num_months):
     # Replace NaN and Inf values with zeros
     monthly_data = np.nan_to_num(monthly_data)
 
@@ -32,11 +32,11 @@ def predict_next_month_revenue(monthly_data):
     model = LinearRegression()
     model.fit(X, y)
 
-    # Predict the next month
-    next_month_data = np.array([len(monthly_data) + 1]).reshape(-1, 1)
-    predicted_revenue = model.predict(next_month_data)[0][0]
+    # Predict the next months
+    future_months = np.arange(len(monthly_data) + 1, len(monthly_data) + num_months + 1).reshape(-1, 1)
+    predicted_revenues = model.predict(future_months).flatten()
 
-    return predicted_revenue
+    return predicted_revenues
 
 def main():
     st.title("Data Analyst Resume and Future Revenue Prediction")
@@ -76,34 +76,23 @@ def main():
 
         if len(given_monthly_data) >= 2:
             # Predict the next month's revenue
-            predicted_revenue = predict_next_month_revenue(given_monthly_data)
+            predicted_revenue = predict_future_revenue(given_monthly_data, num_months=6)
 
-            st.write("Predicted Revenue for the Next Month:")
-            st.write(predicted_revenue)
+            st.write("Predicted Revenue for the Next 6 Months:")
+            for i, revenue in enumerate(predicted_revenue, start=len(given_monthly_data) + 1):
+                st.write(f"Month {i} Predicted Revenue: {revenue}")
 
-            # Plotting a time graph for entered revenues
-            months = np.arange(1, len(given_monthly_data) + 1)
+            # Plotting a time graph for entered and predicted revenues
+            months = np.arange(1, len(given_monthly_data) + 7)
+            all_revenues = np.concatenate((given_monthly_data, predicted_revenue))
+
             plt.figure(figsize=(10, 5))
-            plt.plot(months, given_monthly_data, marker='o', label='Entered Revenue')
-            plt.title("Entered Revenue Over Time")
+            plt.plot(months, all_revenues, marker='o', label='Given and Predicted Revenue')
+            plt.title("Given and Predicted Revenue Over Time")
             plt.xlabel("Month")
             plt.ylabel("Revenue")
             plt.legend()
             st.pyplot(plt)
-
-            # Plotting a separate graph for predicted revenue
-            predicted_months = np.arange(len(given_monthly_data) + 1, len(given_monthly_data) + 2)
-            plt.figure(figsize=(10, 5))
-            plt.plot(predicted_months, [predicted_revenue], marker='o', color='orange', label='Predicted Revenue')
-            plt.title("Predicted Revenue Over Time")
-            plt.xlabel("Month")
-            plt.ylabel("Revenue")
-            plt.legend()
-            st.pyplot(plt)
-
-            # Month-wise output for predicted revenue
-            for i, predicted_month in enumerate(predicted_months, start=len(given_monthly_data) + 1):
-                st.write(f"Month {predicted_month} Predicted Revenue: {predicted_revenue}")
 
 if __name__ == "__main__":
     main()
