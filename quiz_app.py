@@ -1,58 +1,33 @@
 import streamlit as st
-import random
-
-def generate_question():
-    num1 = random.randint(1, 10)
-    num2 = random.randint(1, 10)
-    operator = random.choice(['+', '-', '*'])
-    question = f"{num1} {operator} {num2}"
-    answer = eval(question)
-    return question, answer
+import qrcode
 
 def main():
-    st.title("Math Quiz Game")
-    st.sidebar.header("Settings")
+    st.title("Data Analyst Resume")
 
-    # Set difficulty level
-    difficulty = st.sidebar.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
+    # Personal Information
+    st.header("Personal Information")
+    st.write("Name: John Doe")
+    st.write("Email: john.doe@example.com")
+    st.write("Phone: +1234567890")
 
-    if difficulty == "Easy":
-        num_questions = 5
-    elif difficulty == "Medium":
-        num_questions = 10
-    else:
-        num_questions = 15
+    # LinkedIn QR Code
+    linkedin_url = "https://www.linkedin.com/in/johndoe/"
+    st.write("LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/johndoe/)")
+    
+    # Generate QR Code for LinkedIn
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(linkedin_url)
+    qr.make(fit=True)
 
-    score = 0
-    current_question = 0
+    linkedin_qr = qr.make_image(fill_color="black", back_color="white")
+    st.image(linkedin_qr, caption="Scan QR Code to visit LinkedIn profile", use_column_width=True)
 
-    while current_question < num_questions:
-        question, correct_answer = generate_question()
-
-        user_answer = st.text_input(f"What is the answer to {question}?", key=f"answer_{current_question}")
-        submitted = False  # Variable to track whether the answer is submitted
-
-        if st.button("Submit Answer"):
-            submitted = True  # Set submitted to True when the button is pressed
-            if user_answer:
-                user_answer = float(user_answer)
-                if user_answer == correct_answer:
-                    st.success("Correct!")
-                    score += 1
-                else:
-                    st.error(f"Wrong! The correct answer is {correct_answer}")
-            else:
-                st.warning("Please enter an answer.")
-
-        if submitted:  # Show the result only if the answer is submitted
-            st.write(f"Your current score is: {score}/{current_question + 1}")
-
-            # Button to move to the next question
-            if current_question < num_questions - 1:
-                if st.button("Next Question"):
-                    current_question += 1
-            else:
-                st.write(f"Your final score is: {score}/{num_questions}")
+    # Skills, Tools, Projects, Education, Work Experience (unchanged)
 
 if __name__ == "__main__":
     main()
