@@ -76,7 +76,7 @@ def main():
     st.header("Revenue Prediction")
 
     # User Input: Enter monthly revenue for different months
-    monthly_data = []
+    given_monthly_data = []
 
     # Use st.beta_columns to create a side-by-side layout
     col1, col2, col3, col4 = st.beta_columns(4)
@@ -85,30 +85,24 @@ def main():
         # Use colX.number_input for each column
         with col1:
             revenue = st.number_input(f"Month {i}", value=0.0, step=0.01, format="%f", key=f"revenue_{i}")
-            monthly_data.append(revenue)
+            given_monthly_data.append(revenue)
 
-    if len(monthly_data) >= 2:
-        # Predict the next month's revenue
-        predicted_revenue = predict_next_month_revenue(monthly_data)
+    # Plot graph for given revenue
+    if given_monthly_data:
+        months = np.arange(1, len(given_monthly_data) + 1)
+        st.pyplot(plot_revenue_graph(months, given_monthly_data, 0))
 
-        st.write("Predicted Revenue for the Next Month:")
-        st.write(predicted_revenue)
+    # Predict the next month's revenue
+    predicted_revenue = predict_next_month_revenue(given_monthly_data + [0])
 
-        # Create a graph for given revenue and predicted revenue
-        months = np.arange(1, len(monthly_data) + 2)
-        given_revenue = monthly_data + [predicted_revenue]
+    st.write("Predicted Revenue for the Next Month:")
+    st.write(predicted_revenue)
 
-        # Plot graphs
-        fig, ax = plt.subplots(figsize=(10, 5))
-        sns.lineplot(x=months, y=given_revenue, label="Given Revenue", marker="o", ax=ax)
-        sns.lineplot(x=[months[-1], months[-1] + 1], y=[given_revenue[-1], predicted_revenue], label="Predicted Revenue", marker="o", linestyle="--", ax=ax)
-        plt.title("Given and Predicted Revenue Over Time")
-        plt.xlabel("Month")
-        plt.ylabel("Revenue")
-        plt.legend()
-
-        # Display the plot using st.pyplot
-        st.pyplot(fig)
+    # Plot graph for predicted revenue
+    if given_monthly_data:
+        predicted_monthly_data = given_monthly_data + [predicted_revenue]
+        months = np.arange(1, len(predicted_monthly_data) + 1)
+        st.pyplot(plot_revenue_graph(months, predicted_monthly_data, predicted_revenue))
 
 if __name__ == "__main__":
     main()
