@@ -7,10 +7,6 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
-
-# Set pandas option globally
-pd.set_option('mode.use_inf_as_na', True)
 
 print(sys.executable)
 
@@ -29,6 +25,9 @@ def generate_qr_code(linkedin_url):
     return img_byte_array.getvalue()
 
 def predict_next_month_revenue(monthly_data):
+    # Replace NaN and Inf values with zeros
+    monthly_data = np.nan_to_num(monthly_data)
+
     # Prepare the input data
     X = np.arange(1, len(monthly_data) + 1).reshape(-1, 1)
     y = np.array(monthly_data).reshape(-1, 1)
