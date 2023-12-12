@@ -4,6 +4,7 @@ from PIL import Image
 import io
 import numpy as np
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
 def generate_qr_code(linkedin_url):
     qr = qrcode.QRCode(
@@ -73,12 +74,24 @@ def main():
         for i, revenue in enumerate(given_monthly_data, start=1):
             st.write(f"Month {i} Revenue: {revenue}")
 
-        if len(given_monthly_data) == 6:
+        if len(given_monthly_data) >= 2:
             # Predict the next month's revenue
             predicted_revenue = predict_next_month_revenue(given_monthly_data)
 
             st.write("Predicted Revenue for the Next Month:")
             st.write(predicted_revenue)
+
+            # Plotting a time graph for entered and predicted revenues
+            months = np.arange(1, len(given_monthly_data) + 2)
+            all_revenues = given_monthly_data + [predicted_revenue]
+
+            plt.figure(figsize=(10, 5))
+            plt.plot(months, all_revenues, marker='o', label='Given and Predicted Revenue')
+            plt.title("Given and Predicted Revenue Over Time")
+            plt.xlabel("Month")
+            plt.ylabel("Revenue")
+            plt.legend()
+            st.pyplot(plt)
 
 if __name__ == "__main__":
     main()
