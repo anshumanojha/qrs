@@ -19,12 +19,12 @@ def main():
     linkedin_url = "https://www.linkedin.com/in/johndoe/"
     st.write("LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/johndoe/)")
     
-    # Generate QR Code for LinkedIn
+    # Generate QR Code for LinkedIn with a smaller size
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
+        box_size=3,  # Adjust the box_size to make the QR code smaller
+        border=1,
     )
     qr.add_data(linkedin_url)
     qr.make(fit=True)
