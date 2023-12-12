@@ -2,13 +2,10 @@ import streamlit as st
 import qrcode
 from PIL import Image
 import io
-import sys
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-print(sys.executable)
 
 def generate_qr_code(linkedin_url):
     qr = qrcode.QRCode(
@@ -75,34 +72,40 @@ def main():
     # Revenue Prediction
     st.header("Revenue Prediction")
 
-    # User Input: Enter monthly revenue for different months
+    # User Input: Enter monthly revenue for different months side by side
     given_monthly_data = []
 
     # Use st.beta_columns to create a side-by-side layout
-    col1, col2, col3, col4 = st.beta_columns(4)
+    col1, col2, col3, col4, col5, col6 = st.beta_columns(6)
 
-    for i in range(1, 13):  # Assuming predictions for 12 months
+    for i in range(1, 7):  # Assuming predictions for 6 months
         # Use colX.number_input for each column
         with col1:
             revenue = st.number_input(f"Month {i}", value=0.0, step=0.01, format="%f", key=f"revenue_{i}")
             given_monthly_data.append(revenue)
 
-    # Plot graph for given revenue
-    if given_monthly_data:
-        months = np.arange(1, len(given_monthly_data) + 1)
-        st.pyplot(plot_revenue_graph(months, given_monthly_data, 0))
+    if len(given_monthly_data) == 6:
+        # Predict the next month's revenue
+        predicted_revenue = predict_next_month_revenue(given_monthly_data)
 
-    # Predict the next month's revenue
-    predicted_revenue = predict_next_month_revenue(given_monthly_data + [0])
+        st.write("Predicted Revenue for the Next Month:")
+        st.write(predicted_revenue)
 
-    st.write("Predicted Revenue for the Next Month:")
-    st.write(predicted_revenue)
+        # Create a graph for given revenue and predicted revenue
+        months = np.arange(1, len(given_monthly_data) + 2)
+        given_revenue = given_monthly_data + [predicted_revenue]
 
-    # Plot graph for predicted revenue
-    if given_monthly_data:
-        predicted_monthly_data = given_monthly_data + [predicted_revenue]
-        months = np.arange(1, len(predicted_monthly_data) + 1)
-        st.pyplot(plot_revenue_graph(months, predicted_monthly_data, predicted_revenue))
+        # Plot graphs
+        fig, ax = plt.subplots(figsize=(10, 5))
+        sns.lineplot(x=months, y=given_revenue, label="Given Revenue", marker="o", ax=ax)
+        sns.lineplot(x=[months[-1], months[-1] + 1], y=[given_revenue[-1], predicted_revenue], label="Predicted Revenue", marker="o", linestyle="--", ax=ax)
+        plt.title("Given and Predicted Revenue Over Time")
+        plt.xlabel("Month")
+        plt.ylabel("Revenue")
+        plt.legend()
+
+        # Display the plot using st.pyplot
+        st.pyplot(fig)
 
 if __name__ == "__main__":
     main()
