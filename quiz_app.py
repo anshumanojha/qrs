@@ -23,8 +23,8 @@ def main():
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=1,  # Adjust the box_size to make the QR code smaller
-        border=1,
+        box_size=0.1,  # Adjust the box_size to make the QR code smaller
+        border=0,
     )
     qr.add_data(linkedin_url)
     qr.make(fit=True)
