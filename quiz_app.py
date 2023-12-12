@@ -63,9 +63,15 @@ def main():
 
     # User Input: Enter monthly revenue for different months
     monthly_data = []
+
+    # Use st.beta_columns to create a side-by-side layout
+    col1, col2, col3, col4 = st.beta_columns(4)
+
     for i in range(1, 13):  # Assuming predictions for 12 months
-        revenue = st.number_input(f"Enter Revenue for Month {i}", value=0.0, step=0.01)
-        monthly_data.append(revenue)
+        # Use colX.number_input for each column
+        with col1:
+            revenue = st.number_input(f"Month {i}", value=0.0, step=0.01, format="%f", key=f"revenue_{i}")
+            monthly_data.append(revenue)
 
     if len(monthly_data) >= 2:
         # Predict the next month's revenue
