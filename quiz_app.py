@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
 # Set pandas option globally
 pd.set_option('mode.use_inf_as_na', True)
