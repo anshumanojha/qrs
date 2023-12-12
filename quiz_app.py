@@ -2,6 +2,8 @@ import streamlit as st
 import qrcode
 import sys
 print(sys.executable)
+
+
 def main():
     st.title("Data Analyst Resume")
 
