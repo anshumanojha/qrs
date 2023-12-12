@@ -3,14 +3,10 @@ import qrcode
 from PIL import Image
 import io
 import sys
-import pandas as pd
-from sklearn.linear_model import LinearRegression
 import numpy as np
+from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# Explicitly set pandas options to avoid OptionError
-pd.set_option('mode.use_inf_as_null', True)
 
 print(sys.executable)
 
@@ -30,15 +26,15 @@ def generate_qr_code(linkedin_url):
 
 def predict_next_month_revenue(monthly_data):
     # Prepare the input data
-    X = pd.DataFrame({'Month': np.arange(1, len(monthly_data) + 1)})
-    y = monthly_data.values.reshape(-1, 1)
+    X = np.arange(1, len(monthly_data) + 1).reshape(-1, 1)
+    y = np.array(monthly_data).reshape(-1, 1)
 
     # Assuming a basic linear regression model for demonstration
     model = LinearRegression()
     model.fit(X, y)
 
     # Predict the next month
-    next_month_data = pd.DataFrame({'Month': [len(monthly_data) + 1]})
+    next_month_data = np.array([len(monthly_data) + 1]).reshape(-1, 1)
     predicted_revenue = model.predict(next_month_data)[0][0]
 
     return predicted_revenue
@@ -90,7 +86,7 @@ def main():
 
     if len(monthly_data) >= 2:
         # Predict the next month's revenue
-        predicted_revenue = predict_next_month_revenue(pd.Series(monthly_data))
+        predicted_revenue = predict_next_month_revenue(monthly_data)
 
         st.write("Predicted Revenue for the Next Month:")
         st.write(predicted_revenue)
