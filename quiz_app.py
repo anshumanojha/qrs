@@ -1,8 +1,10 @@
 import streamlit as st
 import qrcode
+from PIL import Image
+import io  # Required for converting PilImage to bytes
 import sys
-print(sys.executable)
 
+print(sys.executable)
 
 def main():
     st.title("Data Analyst Resume")
@@ -27,8 +29,13 @@ def main():
     qr.add_data(linkedin_url)
     qr.make(fit=True)
 
-    linkedin_qr = qr.make_image(fill_color="black", back_color="white")
-    st.image(linkedin_qr, caption="Scan QR Code to visit LinkedIn profile", use_column_width=True)
+    # Convert PilImage to bytes
+    img_byte_array = io.BytesIO()
+    qr.make_image(fill_color="black", back_color="white").save(img_byte_array)
+    img_byte_array = img_byte_array.getvalue()
+
+    # Display the QR code using st.image
+    st.image(Image.open(io.BytesIO(img_byte_array)), caption="Scan QR Code to visit LinkedIn profile", use_column_width=True)
 
     # Skills, Tools, Projects, Education, Work Experience (unchanged)
 
