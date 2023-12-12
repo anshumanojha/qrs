@@ -8,6 +8,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+pd.set_option('mode.use_inf_as_null', True)
 print(sys.executable)
 
 def generate_qr_code(linkedin_url):
