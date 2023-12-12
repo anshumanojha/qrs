@@ -81,17 +81,29 @@ def main():
             st.write("Predicted Revenue for the Next Month:")
             st.write(predicted_revenue)
 
-            # Plotting a time graph for entered and predicted revenues
-            months = np.arange(1, len(given_monthly_data) + 2)
-            all_revenues = given_monthly_data + [predicted_revenue]
-
+            # Plotting a time graph for entered revenues
+            months = np.arange(1, len(given_monthly_data) + 1)
             plt.figure(figsize=(10, 5))
-            plt.plot(months, all_revenues, marker='o', label='Given and Predicted Revenue')
-            plt.title("Given and Predicted Revenue Over Time")
+            plt.plot(months, given_monthly_data, marker='o', label='Entered Revenue')
+            plt.title("Entered Revenue Over Time")
             plt.xlabel("Month")
             plt.ylabel("Revenue")
             plt.legend()
             st.pyplot(plt)
+
+            # Plotting a separate graph for predicted revenue
+            predicted_months = np.arange(len(given_monthly_data) + 1, len(given_monthly_data) + 2)
+            plt.figure(figsize=(10, 5))
+            plt.plot(predicted_months, [predicted_revenue], marker='o', color='orange', label='Predicted Revenue')
+            plt.title("Predicted Revenue Over Time")
+            plt.xlabel("Month")
+            plt.ylabel("Revenue")
+            plt.legend()
+            st.pyplot(plt)
+
+            # Month-wise output for predicted revenue
+            for i, predicted_month in enumerate(predicted_months, start=len(given_monthly_data) + 1):
+                st.write(f"Month {predicted_month} Predicted Revenue: {predicted_revenue}")
 
 if __name__ == "__main__":
     main()
