@@ -3,7 +3,7 @@ import qrcode
 from PIL import Image
 import io
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 import matplotlib.pyplot as plt
 
 def generate_qr_code(linkedin_url):
@@ -26,15 +26,15 @@ def predict_future_revenue(monthly_data, num_months):
 
     # Prepare the input data
     X = np.arange(1, len(monthly_data) + 1).reshape(-1, 1)
-    y = np.array(monthly_data).reshape(-1, 1)
+    y = np.array(monthly_data)
 
-    # Assuming a basic linear regression model for demonstration
-    model = LinearRegression()
+    # Using Random Forest Regressor for prediction
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
     model.fit(X, y)
 
     # Predict the next months
     future_months = np.arange(len(monthly_data) + 1, len(monthly_data) + num_months + 1).reshape(-1, 1)
-    predicted_revenues = model.predict(future_months).flatten()
+    predicted_revenues = model.predict(future_months)
 
     return predicted_revenues
 
@@ -75,14 +75,14 @@ def main():
             st.write(f"Month {i} Revenue: {revenue}")
 
         if len(given_monthly_data) >= 2:
-            # Predict the next month's revenue
+            # Predict the next month's revenue using Random Forest Regressor
             predicted_revenue = predict_future_revenue(given_monthly_data, num_months=6)
 
             st.write("Predicted Revenue for the Next 6 Months:")
             for i, revenue in enumerate(predicted_revenue, start=len(given_monthly_data) + 1):
                 st.write(f"Month {i} Predicted Revenue: {revenue}")
 
-            # Plotting a time graph for entered revenues
+            # Plotting a time graph for entered and predicted revenues
             months = np.arange(1, len(given_monthly_data) + 7)
             all_revenues = np.concatenate((given_monthly_data, predicted_revenue))
 
