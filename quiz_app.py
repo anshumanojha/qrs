@@ -1,8 +1,11 @@
 import streamlit as st
 import qrcode
 from PIL import Image
-import io  # Required for converting PilImage to bytes
+import io
 import sys
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import numpy as np
 
 print(sys.executable)
 
@@ -20,8 +23,22 @@ def generate_qr_code(linkedin_url):
     qr.make_image(fill_color="black", back_color="white").save(img_byte_array)
     return img_byte_array.getvalue()
 
+def predict_next_six_months_revenue(revenue_data):
+    # Assuming a basic linear regression model for demonstration
+    X = np.arange(1, len(revenue_data) + 1).reshape(-1, 1)
+    y = revenue_data.values.reshape(-1, 1)
+
+    model = LinearRegression()
+    model.fit(X, y)
+
+    # Predict the next 6 months
+    next_six_months = np.arange(len(revenue_data) + 1, len(revenue_data) + 7).reshape(-1, 1)
+    predicted_revenue = model.predict(next_six_months)
+
+    return predicted_revenue.flatten()
+
 def main():
-    st.title("Data Analyst Resume")
+    st.title("Data Analyst Resume and Revenue Prediction")
 
     # User Input: LinkedIn URL
     linkedin_url = st.text_input("Enter your LinkedIn URL:")
@@ -40,7 +57,20 @@ def main():
     st.write("Email: john.doe@example.com")
     st.write("Phone: +1234567890")
 
-    # Skills, Tools, Projects, Education, Work Experience (you can customize these sections as needed)
+    # Revenue Prediction
+    st.header("Revenue Prediction")
+
+    # User Input: Enter 6 months' revenue
+    revenue_data = st.text_area("Enter 6 months' revenue (comma-separated):")
+    
+    if revenue_data:
+        revenue_list = [float(val.strip()) for val in revenue_data.split(',')]
+        if len(revenue_list) == 6:
+            # Predict the coming 6 months' revenue
+            predicted_revenue = predict_next_six_months_revenue(pd.Series(revenue_list))
+
+            st.write("Predicted Revenue for the Coming 6 Months:")
+            st.write(predicted_revenue)
 
 if __name__ == "__main__":
     main()
